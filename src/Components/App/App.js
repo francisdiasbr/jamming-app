@@ -6,7 +6,7 @@ import { Playlist } from '../Playlist/Playlist';
 import { SearchBar } from '../SearchBar/SearchBar';
 import { SearchResults } from '../SearchResults/SearchResults';
 
-
+import Spotify from '../../util/Spotify';
 
 class App extends React.Component {
   constructor(props) {
@@ -47,27 +47,28 @@ class App extends React.Component {
 
   savePlaylist() {
     alert('this method is linked to the button correctly')
-    const trackUris =  this.state.playlistTracks.map(track => track.uri);
-
+    const trackUris = this.state.playlistTracks.map(track => track.uri);
   }
 
   search(term) {
-    console.log(term);
+    Spotify.search(term).then(searchResults => {
+      this.setState({ searchResults: searchResults })
+    })
   }
-  
+
   render() {
     return (
       <div>
         <h1>Ja<span className="highlight">mmm</span>ing</h1>
         <div className="App">
-          <SearchBar onSearch={this.search}/>
+          <SearchBar onSearch={this.search} />
           <div className="App-playlist">
             <SearchResults SearchResults={this.state.searchResults} onAdd={this.addTrack} />
-            <Playlist playlistName={this.state.playlistName} 
-            playlistTracks={this.state.playlistTracks} 
-            onRemove={this.removeTrack} 
-            onNameChange={this.updatePlaylistName}
-            onSave ={this.savePlaylist}
+            <Playlist playlistName={this.state.playlistName}
+              playlistTracks={this.state.playlistTracks}
+              onRemove={this.removeTrack}
+              onNameChange={this.updatePlaylistName}
+              onSave={this.savePlaylist}
             />
           </div>
         </div>
